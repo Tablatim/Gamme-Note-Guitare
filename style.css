@@ -1,0 +1,19 @@
+body {
+    background-color: rgb(175, 175, 175);
+    color: black;
+    text-align: center;
+    height: 90vh;
+    background-image:url("grille.gif");
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position: center 100px;
+}
+
+.notes{
+    font-size: 150%;
+}
+
+#tunes{
+    padding: 0;
+    margin: 0;
+}
