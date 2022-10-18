@@ -35,6 +35,7 @@ function sort(t){
     uncheck(e.value)
   }
 }
+
 let checkedcheckboxes = [];
 function check() {
   checkedcheckboxes = [];
@@ -336,7 +337,9 @@ mode = {
   "L":[2, 2, 2, 1, 2, 2],
   "X":[2, 2, 1, 2, 2, 1],
   "E":[2, 1, 2, 2, 1, 2],
-  "O":[1, 2, 2, 1, 2, 2]
+  "O":[1, 2, 2, 1, 2, 2],
+  "K":[2, 2, 3, 2],
+  "J":[3, 2, 2, 3]
 }
 
 function mode_interval_to_mode(mode) {
