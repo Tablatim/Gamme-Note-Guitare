@@ -4,9 +4,11 @@ body {
     text-align: center;
     height: 90vh;
     background-image:url("grille.gif");
+    background-size: 400px 200px;
     background-repeat: no-repeat;
     background-position-x: center;
     background-position: center 100px;
+    zoom: 175%;
 }
 
 .notes{
