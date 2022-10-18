@@ -2,34 +2,28 @@ function draw(X, Y, T)
   {
     var canvas = document.getElementById('circle');
     if (canvas.getContext) {
-        var ctx = canvas.getContext('2d'); 
-        // var X = 22; //150 75
-        // var Y = 25.5;
+        var ctx = canvas.getContext('2d');
         var R = 8;
         ctx.beginPath();
-        ctx.arc(X, Y, R, 0, 2 * Math.PI, false);
-        ctx.fillText(T, X-3.5, Y+3.25)
-        ctx.lineWidth = 3;
-        ctx.fillStyle = "#FF0000";
+        ctx.lineWidth = 1;
+        ctx.fillStyle = "red";
+        ctx.arc(X, Y, R, 0, 2 * Math.PI, false)
+        ctx.fill();
+        ctx.fillStyle = "black";
+        ctx.fillText(T, X-R/2, Y+3.25)
         ctx.font='bold 8px Arial';
         ctx.strokeStyle = '#FF0000';
         ctx.stroke();
     }
 }
-function drawCircles() {
-  for(y=27; y<27+(24*6); y+=24){
-    for(x=22; x<22+(26.25*15); x+=26.25){
-      draw(x, y)
-    }
-  }
-}
+
 function drawCircle(c, f, t) {
   if(f != 0) {
-    x = 22+(26.25*(f-1))
-    y = 27+(24*(c-1))
+    x = 18+(27*(f-1))
+    y = 30+(29*(c-1))
   } else {
-    x = 11
-    y = 27+(24*(c-1))
+    x = 7
+    y = 30+(29.25*(c-1))
   }
   draw(x, y, t)
 }
@@ -78,7 +72,7 @@ function update2() {
 
 function n(){
   checkedcheckboxes.forEach((c) => {
-    for (const [key, value] of Object.entries(a[c])) {
+    for (const [key, value] of Object.entries(notesOnBoard[c])) {
       drawCircle(key, value, c);
       if(value<=3) {
         drawCircle(key, value+12, c);
@@ -94,13 +88,16 @@ function writeTune(){
   var alt = document.getElementById('alt-select');
   if(getSelectedOption(alt).innerHTML == "") {alt = "♮"} else {alt = getSelectedOption(alt).innerHTML}
   var mode = document.getElementById('mode-select');
-  if(getSelectedOption(mode).innerHTML == "") {mode = "M"} else {mode = getSelectedOption(mode).innerHTML}
+  if(getSelectedOption(mode).value == "") {mode = "M"} else {mode = getSelectedOption(mode).value}
   if(tune != "") {
     var temp = tune+alt+mode
-    h.innerHTML = b[temp].join(",  ").replace("true, ", "").replace("false, ", "")
+    h.innerHTML = gamme_constructor(temp).join(",  ")
     update2()
-    b[temp].forEach(n => {
-      for (const [key, value] of Object.entries(a[n])) {
+    gamme_constructor(temp).forEach(n => {
+      if(!Object.keys(notesOnBoard).includes(n)) {
+        n = equ[n]
+      }
+      for (const [key, value] of Object.entries(notesOnBoard[n])) {
         drawCircle(key, value, n);
         if(value<=3) {
           drawCircle(key, value+12, n);
@@ -109,6 +106,7 @@ function writeTune(){
           n = equ[n]
         }
         var g = document.getElementById(n);
+        if(g == null) g = document.getElementById(equ[n]);
         g.checked = true
       }
     })
@@ -119,7 +117,7 @@ function writeTune(){
   
 }
 
-a = {
+notesOnBoard = {
   "C" : {
     6 : 8,
     5 : 3,
@@ -159,6 +157,14 @@ a = {
     3 : 9,
     2 : 5,
     1 : 0,
+  },
+  "E#" : {
+    6 : 1,
+    5 : 8,
+    4 : 3,
+    3 : 10,
+    2 : 6,
+    1 : 1,
   },
   "F" : {
     6 : 1,
@@ -275,58 +281,6 @@ a = {
   },
 }
 
-b = {
-  "C♮M" : ["C", "D", "E", "F", "G", "A", "B"],
-  "D♮M" : ["C#", "D", "E", "F#", "G", "A", "B"],
-  "E♮M" : ["C#", "D#", "E", "F#", "G#", "A", "B"],
-  "F♮M" : ["C", "D", "E", "F", "G", "A", "A#"],
-  "G♮M" : ["C", "D", "E", "F#", "G", "A", "B"],
-  "A♮M" : ["C#", "D", "E", "F#", "G#", "A", "B"],
-  "B♮M" : ["C#", "D#", "E", "F#", "G#", "A#", "B"],
-
-  "C♮m" : ["C", "D", "D#", "F", "G", "G#", "A#"],
-  "D♮m" : ["C", "D", "E", "F", "G", "A", "A#"],
-  "E♮m" : ["C", "D", "E", "F#", "G", "A", "B"],
-  "F♮m" : ["C", "C#", "D#", "F", "G", "G#", "A#"],
-  "G♮m" : ["C", "D", "D#", "F", "G", "A", "A#"],
-  "A♮m" : ["C", "D", "E", "F", "G", "A", "B"],
-  "B♮m" : ["C#", "D", "E", "F#", "G", "A", "B"],
-
-  "C♭M" : ["C♭", "D♭", "E♭", "F♭", "G♭", "A♭", "B♭"],
-  "D♭M" : ["C", "D♭", "E♭", "F", "G♭", "A♭", "B♭"],
-  "E♭M" : ["C", "D", "E♭", "F", "G", "A♭", "B♭"],
-  "F♭M" : ["C♭", "D♭", "E♭", "F♭", "G♭", "A♭", "A"],
-  "G♭M" : ["C♭", "D♭", "E♭", "F", "G♭", "A♭", "B♭"],
-  "A♭M" : ["C", "D♭", "E♭", "F", "G", "A♭", "B♭"],
-  "B♭M" : ["C", "D", "E♭", "F", "G", "A", "B♭"],
-
-  "C♭m" : ["C♭", "D♭", "D", "F♭", "G♭", "G", "A"],
-  "D♭m" : ["C♭", "D♭", "E♭", "F♭", "G♭", "A♭", "A"],
-  "E♭m" : ["C♭", "D♭", "E♭", "F", "G♭", "A♭", "B♭"],
-  "F♭m" : ["C♭", "C", "D", "F♭", "G♭", "G", "A"],
-  "G♭m" : ["C♭", "D♭", "D", "F♭", "G♭", "A♭", "A"],
-  "A♭m" : ["C♭", "D♭", "E♭", "F♭", "G♭", "A♭", "B♭"],
-  "B♭m" : ["C", "D♭", "E♭", "F", "G♭", "A♭", "B♭"],
-
-  "C#M" : ["C#", "D#", "F", "F#", "G#", "A#", "C"],
-  "D#M" : ["D", "D#", "F", "G", "G#", "A#", "C"],
-  "E#M" : ["D", "E", "F", "G", "A", "A#", "C"],
-  "F#M" : ["C#", "D#", "F", "F#", "G#", "A#", "B"],
-  "G#M" : ["C#", "D#", "F", "G", "G#", "A#", "C"],
-  "A#M" : ["D", "D#", "F", "G", "A", "A#", "C"],
-  "B#M" : ["D", "E", "F", "G", "A", "B", "C"],
-
-  "C#m" : ["C#", "D#", "E", "F#", "G#", "A", "B"],
-  "D#m" : ["C#", "D#", "F", "F#", "G#", "A#", "B"],
-  "E#m" : ["C#", "D#", "F", "G", "G#", "A#", "C"],
-  "F#m" : ["C#", "D", "E", "F#", "G#", "A", "B"],
-  "G#m" : ["C#", "D#", "E", "F#", "G#", "A#", "B"],
-  "A#m" : ["C#", "D#", "F", "F#", "G#", "A#", "C"],
-  "B#m" : ["D", "D#", "F", "G", "G#", "A#", "C"],
-}
-
-ordre = ["C", "D", "E", "F", "G", "A", "B", "C"]
-
 equ = {
   "C" : "B#",
   "C#" : "D♭",
@@ -357,4 +311,81 @@ function getSelectedOption(sel) {
       }
   }
   return opt;
+}
+
+all_notes = [
+  "C♮B#", 
+  "C#D♭", 
+  "D♮", 
+  "D#E♭", 
+  "E♮F♭", 
+  "E#F♮", 
+  "F#G♭", 
+  "G♮", 
+  "G#A♭", 
+  "A♮", 
+  "A#B♭", 
+  "B♮C♭"
+]
+
+mode = {
+  "M":[2, 2, 1, 2, 2, 2],
+  "m":[2, 1, 2, 2, 1, 2],
+  "D":[2, 1, 2, 2, 2, 1],
+  "P":[1, 2, 2, 2, 1, 2],
+  "L":[2, 2, 2, 1, 2, 2],
+  "X":[2, 2, 1, 2, 2, 1],
+  "E":[2, 1, 2, 2, 1, 2],
+  "O":[1, 2, 2, 1, 2, 2]
+}
+
+function mode_interval_to_mode(mode) {
+  rMode = []
+  for (let index = 0; index < mode.length; index++) {
+    const element = mode[index];
+    if(index == 0) {
+      rMode.push(element)
+    } else {
+      rMode.push(rMode[index-1]+element)
+    }
+  }
+  return rMode
+}
+
+function gamme_constructor(tune) {
+  root = tune.substring(0, 2)
+  alteration = root.slice(-1)
+  tune_mode = mode_interval_to_mode(mode[tune.slice(-1)])
+  indexOfRoot = 0
+  for (let i = 0; i < all_notes.length; i++) {
+    if(all_notes[i].includes(root)) {
+      indexOfRoot = i
+      break
+    }
+  }
+  final_gamme = [root]
+  tune_mode.forEach(shift => {
+    new_note = all_notes[(indexOfRoot + shift) % all_notes.length]
+    final_gamme.push(new_note)
+  });
+  for(i = 0; i<final_gamme.length; i++) {
+    if(alteration == "#") {
+      if(final_gamme[i].length > 2) {
+        final_gamme[i] = final_gamme[i].substring(0, 2)
+      }
+    }
+    else if(alteration == "♭") {
+      if(final_gamme[i].length > 2) {
+        final_gamme[i] = final_gamme[i].slice(-2)
+      }
+    } else {
+      if(final_gamme[i].length > 2) {
+        final_gamme[i] = final_gamme[i].slice(-2)
+      }
+    }
+    if(final_gamme[i].includes("♮")) {
+      final_gamme[i] = final_gamme[i][0]
+    }
+  };
+  return final_gamme
 }
