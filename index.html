@@ -8,7 +8,7 @@
     </head>
     <body>
         <h1 id="bigtitle" class="title">Mode - Gamme</h1>
-        <canvas id="circle" height="200" width="400"></canvas><br>
+        <canvas id="circle" height="200" width="400"></canvas><br><br>
         <div class="notes">
             <form id="form" method="POST">
                 C<input type="checkbox" value="C" id="C" name="f" onclick="sort(this)">
@@ -34,15 +34,19 @@
                     <option value="B">B</option>
                 </select>
                 <select name="select" id="alt-select" onchange="writeTune()">
-                    <option value="blank" selected></option>
                     <option value="#">#</option>
-                    <option value=n">♮</option>
+                    <option value="n" selected>♮</option>
                     <option value="b">♭</option>
                 </select>
                 <select name="select" id="mode-select" onchange="writeTune()">
-                    <option value="blank" selected></option>
-                    <option value="Ma">M</option>
-                    <option value="Mi">m</option>
+                    <option value="M" selected>Majeur/Ionien</option>
+                    <option value="m">Mineur</option>
+                    <option value="D">Dorien</option>
+                    <option value="P">Phrygien</option>
+                    <option value="L">Lydien</option>
+                    <option value="X">Mixolydien</option>
+                    <option value="E">Eolien</option>
+                    <option value="O">Locrien</option>
                 </select>
                 <h4 id="tunes"></h4>
             </form>
