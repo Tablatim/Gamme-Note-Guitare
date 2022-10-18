@@ -20,7 +20,7 @@ function draw(X, Y, T)
 function drawCircle(c, f, t) {
   if(f != 0) {
     x = 18+(27*(f-1))
-    y = 30+(29*(c-1))
+    y = 30+(29.25*(c-1))
   } else {
     x = 7
     y = 30+(29.25*(c-1))
