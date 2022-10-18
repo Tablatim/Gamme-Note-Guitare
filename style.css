@@ -2,7 +2,6 @@ body {
     background-color: rgb(175, 175, 175);
     color: black;
     text-align: center;
-    height: 90vh;
     background-image:url("grille.gif");
     background-size: 400px 200px;
     background-repeat: no-repeat;
