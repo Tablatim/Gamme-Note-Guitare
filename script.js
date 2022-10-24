@@ -1,6 +1,7 @@
 
 // GLOBAL VARIABLES
-var globalInstrument // Instrument currently showed
+// Instrument currently showed, init in init() obviously
+var globalInstrument 
 // Where're the notes on the keyboard (index used in drawCircleForPiano fct)
 const notesOnKeyBoard = {
   "C" : 1,
