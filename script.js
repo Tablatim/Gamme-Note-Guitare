@@ -223,9 +223,9 @@ const chords_charts = {
   "M": "MmmMMmd", //majeur
   "m": "mdMmmMM", //mineur
   "D": "mmMMmdM", //Dorien
-  "P": "mMMmmMm", //Phrygien
-  "L": "MMmmMmm", //Lydien
-  "X": "MmmMmmM", //Mixolydien
+  "P": "mMMmdMm", //Phrygien
+  "L": "MMmdMmm", //Lydien
+  "X": "MmdMmmM", //Mixolydien
   "E": "mdMmmMM", //Eolien
   "O": "dMmmMMm", //Locrien
 }
