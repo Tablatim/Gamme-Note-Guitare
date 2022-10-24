@@ -1,124 +1,24 @@
-function draw(X, Y, T)
-  {
-    var canvas = document.getElementById('circle');
-    if (canvas.getContext) {
-        var ctx = canvas.getContext('2d');
-        var R = 8;
-        ctx.beginPath();
-        ctx.lineWidth = 1;
-        ctx.fillStyle = "red";
-        ctx.arc(X, Y, R, 0, 2 * Math.PI, false)
-        ctx.fill();
-        ctx.fillStyle = "black";
-        ctx.fillText(T, X-R/2, Y+3.25)
-        ctx.font='bold 8px Arial';
-        ctx.strokeStyle = '#FF0000';
-        ctx.stroke();
-    }
+
+// GLOBAL VARIABLES
+var globalInstrument // Instrument currently showed
+// Where're the notes on the keyboard (index used in drawCircleForPiano fct)
+const notesOnKeyBoard = {
+  "C" : 1,
+  "C#" : 1,
+  "D" : 2,
+  "D#" : 2,
+  "E" : 3,
+  "F" : 4,
+  "F#" : 4,
+  "G" : 5,
+  "G#" : 5,
+  "A" : 6,
+  "A#" : 6,
+  "B" : 7
 }
 
-function drawCircle(c, f, t) {
-  if(f != 0) {
-    x = 18+(27*(f-1))
-    y = 30+(29.25*(c-1))
-  } else {
-    x = 7
-    y = 30+(29.25*(c-1))
-  }
-  draw(x, y, t)
-}
-function sort(t){
-  var e = document.getElementById(t.id);
-  if(e.checked){
-    check()
-  } else {
-    uncheck(e.value)
-  }
-}
-
-let checkedcheckboxes = [];
-function check() {
-  checkedcheckboxes = [];
-  const checkboxes = document.querySelectorAll('input[name="f"]:checked');
-  checkboxes.forEach((checkbox) => {
-    checkedcheckboxes.push(checkbox.value);
-  });
-  n()
-}
-function uncheck(v){
-  index = checkedcheckboxes.indexOf(v)
-  checkedcheckboxes.splice(index, 1)
-  update()
-}
-
-function update() {
-  var canvas = document.getElementById('circle');
-  if (canvas.getContext) {
-    var ctx = canvas.getContext('2d'); 
-    ctx.clearRect(0, 0, 1000, 1000);
-    n()
-  }
-}
-
-function update2() {
-  var canvas = document.getElementById('circle');
-  var ctx = canvas.getContext('2d'); 
-  ctx.clearRect(0, 0, 1000, 1000);
-
-  const checkboxes = document.querySelectorAll('input[name="f"]');
-  checkboxes.forEach(c => {
-    if(c.checked) c.checked = false
-  })
-}
-
-function n(){
-  checkedcheckboxes.forEach((c) => {
-    for (const [key, value] of Object.entries(notesOnBoard[c])) {
-      drawCircle(key, value, c);
-      if(value<=3) {
-        drawCircle(key, value+12, c);
-      }
-    }
-  });
-}
-
-function writeTune(){
-  var h = document.getElementById("tunes");
-  var tune = document.getElementById('tune-select');
-  tune = getSelectedOption(tune).innerHTML
-  var alt = document.getElementById('alt-select');
-  if(getSelectedOption(alt).innerHTML == "") {alt = "♮"} else {alt = getSelectedOption(alt).innerHTML}
-  var mode = document.getElementById('mode-select');
-  if(getSelectedOption(mode).value == "") {mode = "M"} else {mode = getSelectedOption(mode).value}
-  if(tune != "") {
-    var temp = tune+alt+mode
-    h.innerHTML = gamme_constructor(temp).join(",  ")
-    update2()
-    gamme_constructor(temp).forEach(n => {
-      if(!Object.keys(notesOnBoard).includes(n)) {
-        n = equ[n]
-      }
-      for (const [key, value] of Object.entries(notesOnBoard[n])) {
-        drawCircle(key, value, n);
-        if(value<=3) {
-          drawCircle(key, value+12, n);
-        }
-        if(n.includes("♭")) {
-          n = equ[n]
-        }
-        var g = document.getElementById(n);
-        if(g == null) g = document.getElementById(equ[n]);
-        g.checked = true
-      }
-    })
-  } else {
-    h.innerHTML = ""
-    update2()
-  }
-  
-}
-
-notesOnBoard = {
+// Where're the notes on the guitar board (index used in drawGuitarCircles fct)
+const notesOnBoard = {
   "C" : {
     6 : 8,
     5 : 3,
@@ -224,14 +124,6 @@ notesOnBoard = {
     1 : 7,
   },
 
-  "C♭" : {
-    6 : 7,
-    5 : 2,
-    4 : 9,
-    3 : 4,
-    2 : 0,
-    1 : 7,
-  },
   "D♭" : {
     6 : 9,
     5 : 4,
@@ -247,14 +139,6 @@ notesOnBoard = {
     3 : 8,
     2 : 4,
     1 : 11,
-  },
-  "F♭" : {
-    6 : 0,
-    5 : 7,
-    4 : 2,
-    3 : 9,
-    2 : 5,
-    1 : 0,
   },
   "G♭" : {
     6 : 2,
@@ -282,7 +166,8 @@ notesOnBoard = {
   },
 }
 
-equ = {
+// Equivalent for each note to avoid for exemple A# & B♭ in the same scale
+const equ = {
   "C" : "B#",
   "C#" : "D♭",
   "D♭" : "C#",
@@ -302,19 +187,8 @@ equ = {
   "C♭" : "B",
   "B#" : "C"
 }
-
-function getSelectedOption(sel) {
-  var opt;
-  for ( var i = 0, len = sel.options.length; i < len; i++ ) {
-      opt = sel.options[i];
-      if ( opt.selected === true ) {
-          break;
-      }
-  }
-  return opt;
-}
-
-all_notes = [
+// All notes used to creates scales in scale_constructor fct
+const all_notes = [
   "C♮B#", 
   "C#D♭", 
   "D♮", 
@@ -329,23 +203,227 @@ all_notes = [
   "B♮C♭"
 ]
 
-mode = {
-  "M":[2, 2, 1, 2, 2, 2],
-  "m":[2, 1, 2, 2, 1, 2],
-  "D":[2, 1, 2, 2, 2, 1],
-  "P":[1, 2, 2, 2, 1, 2],
-  "L":[2, 2, 2, 1, 2, 2],
-  "X":[2, 2, 1, 2, 2, 1],
-  "E":[2, 1, 2, 2, 1, 2],
-  "O":[1, 2, 2, 1, 2, 2],
-  "K":[2, 2, 3, 2],
-  "J":[3, 2, 2, 3]
+// All modes and their construction used in scale_constructor fct
+const mode = {
+  "M":[2, 2, 1, 2, 2, 2], //Majeur
+  "m":[2, 1, 2, 2, 1, 2], //mineur
+  "D":[2, 1, 2, 2, 2, 1], //Dorien
+  "P":[1, 2, 2, 2, 1, 2], //Phrygien
+  "L":[2, 2, 2, 1, 2, 2], //Lydien
+  "X":[2, 2, 1, 2, 2, 1], //Mixolydien
+  "E":[2, 1, 2, 2, 1, 2], //Eolien
+  "O":[1, 2, 2, 1, 2, 2], //Locrien
+  "K":[2, 2, 3, 2],       //Penta Majeur
+  "J":[3, 2, 2, 3]        //Penta mineur
 }
 
-function mode_interval_to_mode(mode) {
+// Chart of chords for each mode used in findChords fct
+const chords_charts = {
+  "M": "MmmMMmd", //majeur
+  "m": "mdMmmMM", //mineur
+  "D": "mmMMmdM", //Dorien
+  "P": "mMMmmMm", //Phrygien
+  "L": "MMmmMmm", //Lydien
+  "X": "MmmMmmM", //Mixolydien
+  "E": "mdMmmMM", //Eolien
+  "O": "dMmmMMm", //Locrien
+}
+
+// List of all checked note
+let checkedcheckboxes = [];
+
+// Init globalInstrument & Background
+function init() {
+  var instrument = document.getElementById('instrument-select');
+  globalInstrument = getSelectedOption(instrument).value
+  if(globalInstrument == "G") {
+    document.body.style.backgroundImage = "url('grille.gif')";
+  } else if(globalInstrument == "P") {
+    document.body.style.backgroundImage = "url('piano.png')";
+  }
+  writeTune()
+}
+init()
+
+// Update globalInstrument and change instrument mode (G;P)
+function changeInstrument() {
+  var instrument = document.getElementById('instrument-select');
+  globalInstrument = getSelectedOption(instrument).value
+  if(globalInstrument == "G") {
+    document.body.style.backgroundImage = "url('grille.gif')";
+  } else if(globalInstrument == "P") {
+    document.body.style.backgroundImage = "url('piano.png')";
+  }
+  writeTune()
+}
+
+// Draw Circle at a given Coo with the text T
+function drawCircleGen(X, Y, T, R=8) {
+  var canvas = document.getElementById('circle');
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.fillStyle = "red";
+        ctx.arc(X, Y, R, 0, 2 * Math.PI, false)
+        ctx.fill();
+        ctx.fillStyle = "black";
+        ctx.fillText(T, X-R/2, Y+3.25)
+        ctx.font='bold 8px Arial';
+        ctx.strokeStyle = '#FF0000';
+        ctx.stroke();
+    }
+}
+
+// Draw circle for a note on the keyboard
+function drawCircleForPiano(note) {
+  n = notesOnKeyBoard[note]
+  if(note.includes("#") || note.includes("♭")) {
+    X = 54+(58.5*(n-1))
+    Y = 110
+  } else {
+    X = 26+(58*(n-1))
+    Y = 180
+  }
+  drawCircleGen(X, Y, note, 12.5)
+}
+
+// Determine coo for a note & draw a circle on this coo with the text T
+function drawCircleForGuitar(c, f, T) {
+  if(f != 0) {
+    X = 18+(27*(f-1))
+    Y = 10+(29.25*(c-1))
+  } else {
+    X = 7
+    Y = 10+(29.25*(c-1))
+  }
+  drawCircleGen(X, Y, T)
+}
+
+// Fill checkedcheckboxes
+function sort(t){
+  var e = document.getElementById(t.id);
+  if(e.checked){
+    checkedcheckboxes = [];
+    const checkboxes = document.querySelectorAll('input[name="f"]:checked');
+    checkboxes.forEach((checkbox) => {
+      checkedcheckboxes.push(checkbox.value);
+    });
+    drawAllCircles()
+  } else {
+    index = checkedcheckboxes.indexOf(e.value)
+    checkedcheckboxes.splice(index, 1)
+    update()
+  }
+}
+
+// Reset CheckBox
+function resetCheckBox() {
+  var canvas = document.getElementById('circle');
+  var ctx = canvas.getContext('2d'); 
+  ctx.clearRect(0, 0, 1000, 1000);
+
+  const checkboxes = document.querySelectorAll('input[name="f"]');
+  checkboxes.forEach(c => {
+    if(c.checked) c.checked = false
+  })
+}
+
+// Draw All Circles with canvas init
+function update() {
+  var canvas = document.getElementById('circle');
+  if (canvas.getContext) {
+    var ctx = canvas.getContext('2d'); 
+    ctx.clearRect(0, 0, 1000, 1000);
+    drawAllCircles()
+  }
+}
+
+// Draw Cricles For Each Checked Box
+function drawAllCircles(){
+  checkedcheckboxes.forEach((c) => {
+    if(globalInstrument == 'G') {
+      for (const [key, value] of Object.entries(notesOnBoard[c])) {
+        drawCircleForGuitar(key, value, c);
+        if(value<=3) {
+          drawCircleForGuitar(key, value+12, c);
+        }
+      }
+    } else if(globalInstrument == 'P') {
+      drawCircleForPiano(c)
+    }
+  });
+}
+
+// Takes the selected tune, and draws the notes of the scale on the board
+function writeTune(){
+  table = document.getElementsByTagName('table');
+  var tune = document.getElementById('tune-select');
+  tune = getSelectedOption(tune).innerHTML
+  var alt = document.getElementById('alt-select');
+  if(getSelectedOption(alt).innerHTML == "") {alt = "♮"} else {alt = getSelectedOption(alt).innerHTML}
+  var mode = document.getElementById('mode-select');
+  if(getSelectedOption(mode).value == "") {mode = "M"} else {mode = getSelectedOption(mode).value}
+  if(tune != "") {
+    var tempTune = tune+alt+mode
+    findChords(tempTune)
+    resetCheckBox()
+    scale_constructor(tempTune).forEach(n => {
+      if(!Object.keys(notesOnBoard).includes(n) || !Object.keys(notesOnKeyBoard).includes(n)) {
+        n = equ[n]
+      }
+      if(globalInstrument=="G") {
+        for (const [key, value] of Object.entries(notesOnBoard[n])) {
+          drawCircleForGuitar(key, value, n);
+          if(value<=3) {
+            drawCircleForGuitar(key, value+12, n);
+          }
+          if(n.includes("♭")) {
+            n = equ[n]
+          }
+          var g = document.getElementById(n);
+          if(g == null) {
+            n = equ[n]
+            g = document.getElementById(n);
+          }
+          g.checked = true
+        }
+      } else if(globalInstrument == "P") {
+        drawCircleForPiano(n)
+        if(n.includes("♭")) {
+          n = equ[n]
+        }
+        var g = document.getElementById(n);
+        if(g == null) {
+          n = equ[n]
+          g = document.getElementById(n);
+        }
+        g.checked = true
+      }
+    })
+  } else {
+      table.innerHTML = ""
+      updateCheckBox()
+  }
+}
+
+// Return the selected option on the HTML Select element
+function getSelectedOption(sel) {
+  var opt;
+  for ( var i = 0, len = sel.options.length; i < len; i++ ) {
+      opt = sel.options[i];
+      if ( opt.selected === true ) {
+          break;
+      }
+  }
+  return opt;
+}
+
+// Convert the interval (note -> next note) to the interval (root -> note)
+function mode_interval_to_mode(modelocal) {
   rMode = []
-  for (let index = 0; index < mode.length; index++) {
-    const element = mode[index];
+  for (let index = 0; index < modelocal.length; index++) {
+    const element = modelocal[index];
     if(index == 0) {
       rMode.push(element)
     } else {
@@ -355,7 +433,8 @@ function mode_interval_to_mode(mode) {
   return rMode
 }
 
-function gamme_constructor(tune) {
+// Construct the scale based on tune using mode can return mode name if returnMode is given (!=0)
+function scale_constructor(tune, returnMode = 0) {
   root = tune.substring(0, 2)
   alteration = root.slice(-1)
   tune_mode = mode_interval_to_mode(mode[tune.slice(-1)])
@@ -390,5 +469,78 @@ function gamme_constructor(tune) {
       final_gamme[i] = final_gamme[i][0]
     }
   };
-  return final_gamme
+  if(returnMode == 0) {
+    return final_gamme
+  } else {
+    return [final_gamme, tune.slice(-1)]
+  }
+}
+
+// Find all the chord of the scale according to chords_charts dict and generate the HTML table
+function findChords(tune){
+  temp = scale_constructor(tune, 1)
+  scale = temp[0]
+  findChords_mode = temp[1]
+  chord_list = []
+  chord_dict = {}
+  for(i=0; i<scale.length; i++) {
+    if(form_Chord_From_Scale_And_Number(i, scale, findChords_mode) != -1) {
+      chord_dict[romanize(i+1)] = form_Chord_From_Scale_And_Number(i, scale, findChords_mode)
+    } else {
+      break
+    }
+  }
+  let table = document.querySelector("table");
+  table.innerHTML = ""
+  let data = Object.keys(chord_dict);
+  generateTableHead(table, data);
+  generateTable(table, chord_dict);
+}
+
+// Find the chord for a given note of the scale according to chords_charts dict
+function form_Chord_From_Scale_And_Number(n, scale, form_Chord_From_Scale_And_Number_mode) {
+  note = scale[n]
+  if(!Object.keys(chords_charts).includes(form_Chord_From_Scale_And_Number_mode)) return -1
+  chart = chords_charts[form_Chord_From_Scale_And_Number_mode]
+  if(chart[n] == "M") {
+    return note
+  } else if(chart[n] == "d") {
+    return `${note}°`
+  } else {
+    return `${note}${chart[n]}`
+  }
+}
+
+// Give the roman number corresponding to the given number
+function romanize(num) {
+  var lookup = {V:5,IV:4,I:1},roman = '',i;
+  for ( i in lookup ) {
+    while ( num >= lookup[i] ) {
+      roman += i;
+      num -= lookup[i];
+    }
+  }
+  return roman;
+}
+
+// Generate the rows of the chords table
+function generateTableHead(table, chord_dict) {
+  let thead = table.createTHead();
+  let row = thead.insertRow();
+  for (let key of chord_dict) {
+    let th = document.createElement("th");
+    let text = document.createTextNode(key);
+    th.appendChild(text);
+    row.appendChild(th);
+  }
+}
+
+// Insert the cell of the chords table
+function generateTable(table, chord_dict) {
+  let row = table.insertRow();
+  for (key in chord_dict) {
+    let cell = row.insertCell();
+    let text = document.createTextNode(chord_dict[key]);
+    cell.appendChild(text);
+  }
 }
