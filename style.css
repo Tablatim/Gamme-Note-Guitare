@@ -2,11 +2,10 @@ body {
     background-color: rgb(175, 175, 175);
     color: black;
     text-align: center;
-    background-image:url("grille.gif");
     background-size: 400px 200px;
     background-repeat: no-repeat;
     background-position-x: center;
-    background-position: center 100px;
+    background-position: center 45px;
     zoom: 175%;
 }
 
@@ -14,7 +13,28 @@ body {
     font-size: 150%;
 }
 
-#tunes{
+#chords{
     padding: 0;
     margin: 0;
+}
+
+#bigtitle {
+    margin: 0;
+}
+
+table,
+td {
+    border: 1px solid #333;
+}
+
+thead,
+tfoot {
+    background-color: #333;
+    color: #fff;
+}
+
+.table-center {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
 }
