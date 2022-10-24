@@ -7,8 +7,8 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h1 id="bigtitle" class="title">Mode - Gamme</h1>
-        <canvas id="circle" height="200" width="400"></canvas><br><br>
+        <h1 id="bigtitle" class="title">Gamme - Mode - Accords</h1>
+        <canvas id="circle" height="200" width="400"></canvas>
         <div class="notes">
             <form id="form" method="POST">
                 C<input type="checkbox" value="C" id="C" name="f" onclick="sort(this)">
@@ -22,10 +22,9 @@
                 G#<input type="checkbox" value="G#" id="G#" name="f" onclick="sort(this)">
                 A<input type="checkbox" value="A" id="A" name="f" onclick="sort(this)">
                 A#<input type="checkbox" value="A#" id="A#" name="f" onclick="sort(this)">
-                B<input type="checkbox" value="B" id="B" name="f" onclick="sort(this)">
-                || <select name="select" id="tune-select" onchange="writeTune()">
-                    <option value="blank" selected></option>
-                    <option value="C">C</option>
+                B<input type="checkbox" value="B" id="B" name="f" onclick="sort(this)"><br>
+                <select name="select" id="tune-select" onchange="writeTune()">
+                    <option value="C" selected>C</option>
                     <option value="D">D</option>
                     <option value="E">E</option>
                     <option value="F">F</option>
@@ -50,7 +49,12 @@
                     <option value="E">Eolien</option>
                     <option value="O">Locrien</option>
                 </select>
-                <h4 id="tunes"></h4>
+                <select name="select" id="instrument-select" onchange="changeInstrument()" style="margin: 0;">
+                    <option value="G" selected>Guitare</option>
+                    <option value="P">Piano</option>
+                </select>
+                <!-- <h4 id="chords"></h4> -->
+            <table class="table-center"></table>
             </form>
         </div>
         <script src="script.js" type="text/javascript"></script>
