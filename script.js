@@ -518,9 +518,6 @@ function form_Chord_From_Scale_And_Number(n, scale, form_Chord_From_Scale_And_Nu
 
 // Change the case of the roman symbol according to the chord
 function toRomanNumberSymbol(num, chord) {
-  console.log(num)
-  console.log(chord)
-
   if(chord.charAt(chord.length-1) == "M" || chord.length == 1) {
     return romanize(num+1)
   } else if(chord.charAt(chord.length-1) == "m") {
