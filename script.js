@@ -1,7 +1,10 @@
 
-// GLOBAL VARIABLES
-// Instrument currently showed, init in init() obviously
+/*-----------------\
+| GLOBAL VARIABLES |
+\-----------------*/
+// Instrument currently showed
 var globalInstrument 
+
 // Where're the notes on the keyboard (index used in drawCircleForPiano fct)
 const notesOnKeyBoard = {
   "C" : 1,
@@ -486,7 +489,8 @@ function findChords(tune){
   chord_dict = {}
   for(i=0; i<scale.length; i++) {
     if(form_Chord_From_Scale_And_Number(i, scale, findChords_mode) != -1) {
-      chord_dict[romanize(i+1)] = form_Chord_From_Scale_And_Number(i, scale, findChords_mode)
+      chord = form_Chord_From_Scale_And_Number(i, scale, findChords_mode)
+      chord_dict[toRomanNumberSymbol(i, chord)] = chord
     } else {
       break
     }
@@ -510,6 +514,23 @@ function form_Chord_From_Scale_And_Number(n, scale, form_Chord_From_Scale_And_Nu
   } else {
     return `${note}${chart[n]}`
   }
+}
+
+// Change the case of the roman symbol according to the chord
+function toRomanNumberSymbol(num, chord) {
+  console.log(num)
+  console.log(chord)
+
+  if(chord.charAt(chord.length-1) == "M" || chord.length == 1) {
+    return romanize(num+1)
+  } else if(chord.charAt(chord.length-1) == "m") {
+    return romanize(num+1).toLowerCase()
+  } else if(chord.charAt(chord.length-1) == "°") {
+    return romanize(num+1)+"°"
+  } else {
+    return romanize(num+1)
+  }
+
 }
 
 // Give the roman number corresponding to the given number
