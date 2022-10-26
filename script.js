@@ -106,10 +106,10 @@ function init() {
     document.body.style.backgroundImage = "url('grille.gif')";
   } else if(globalInstrument == "P") {
     document.body.style.backgroundImage = "url('piano.png')";
-  }
-  writeTune()
+  };
+  writeTune();
 };
-init()
+init();
 
 // Update globalInstrument and change instrument mode (G;P)
 function changeInstrument() {
