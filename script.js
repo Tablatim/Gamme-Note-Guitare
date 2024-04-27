@@ -91,6 +91,7 @@ const chords_charts = {
   "X": "MmdMmmM", //Mixolydien
   "E": "mdMmmMM", //Eolien
   "O": "dMmmMMm", //Locrien
+  "B": "MMmMMMm", //Double Harmonique mineur
 };
 
 // List of all checked note
