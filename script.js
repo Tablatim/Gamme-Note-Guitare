@@ -77,7 +77,8 @@ const mode = {
   "E":[2, 1, 2, 2, 1, 2], //Eolien
   "O":[1, 2, 2, 1, 2, 2], //Locrien
   "K":[2, 2, 3, 2],       //Penta Majeur
-  "J":[3, 2, 2, 3]        //Penta mineur
+  "J":[3, 2, 2, 3],       //Penta mineur
+  "B":[2, 1, 3, 1, 1, 2]  //Double Harmonique mineur
 };
 
 // Chart of chords for each mode used in findChords fct
