@@ -48,13 +48,18 @@
                     <option value="L">Lydien</option>
                     <option value="X">Mixolydien</option>
                     <option value="O">Locrien</option>
-                    <option value="B">Byzantine/Double Harmonique Mineur</option>
                 </select>
                 <select name="select" id="instrument-select" onchange="changeInstrument()" style="margin: 0;">
                     <option value="G" selected>Guitare</option>
                     <option value="P">Piano</option>
                 </select>
-                <!-- <h4 id="chords"></h4> -->
+                <select name="select" id="tuning-select" onchange="changeTuning()" style="margin: 0;">
+                    <option value="EADGBE" selected>Guitar Standard : EADGBE</option>
+                    <option value="CGADGC">Arabic Oud : CGADGC</option>
+                    <option value="DABEAD">Turkish Oud : DABEAD</option>
+                    <option value="CUSTOM">Custom</option>
+                </select>
+                <textarea name="custom-tuning" id="custom-tuning" rows="1" cols="6" maxlength="6" autocapitalize="characters"  onkeypress="onTestChange();"></textarea>
             <table class="table-center"></table>
             </form>
         </div>
