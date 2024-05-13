@@ -22,7 +22,7 @@ const notesOnKeyBoard = {
 };
 
 // Note on each guitar string
-const baseNoteGuitar = "EADGBE";
+let tuning = "EADGBE";
 
 // Equivalent for each note to avoid for exemple A# & B♭ in the same scale
 const equ = {
@@ -77,8 +77,7 @@ const mode = {
   "E":[2, 1, 2, 2, 1, 2], //Eolien
   "O":[1, 2, 2, 1, 2, 2], //Locrien
   "K":[2, 2, 3, 2],       //Penta Majeur
-  "J":[3, 2, 2, 3],       //Penta mineur
-  "B":[1, 3, 1, 2, 1, 3]  //Double Harmonique mineur
+  "J":[3, 2, 2, 3]        //Penta mineur
 };
 
 // Chart of chords for each mode used in findChords fct
@@ -91,14 +90,13 @@ const chords_charts = {
   "X": "MmdMmmM", //Mixolydien
   "E": "mdMmmMM", //Eolien
   "O": "dMmmMMm", //Locrien
-  "B": "MMmMMMm", //Double Harmonique mineur
 };
 
 // List of all checked note
 let checkedcheckboxes = [];
 
 // Dict for all notes on guitar board; -1 at the beginning then filled in createBoardDict() fct
-let notesOnBoard = -1;
+let notesOnBoard;
 
 // Init globalInstrument & Background
 function init() {
@@ -119,10 +117,31 @@ function changeInstrument() {
   globalInstrument = getSelectedOption(instrument).value;
   if(globalInstrument == "G") {
     document.body.style.backgroundImage = "url('grille.gif')";
+    text = document.getElementById("tuning-select")
+    text.style.visibility = "visible"
   } else if(globalInstrument == "P") {
     document.body.style.backgroundImage = "url('piano.png')";
+    text = document.getElementById("tuning-select")
+    text.style.visibility = "hidden"
   };
   writeTune();
+};
+
+// Update globalInstrument and change tuning mode (S;AO;TO)
+function changeTuning() {
+  var tuningMode = document.getElementById('tuning-select');
+  if(getSelectedOption(tuningMode).value != "CUSTOM") {
+    tuning = getSelectedOption(tuningMode).value;
+    text = document.getElementById("custom-tuning")
+    text.style.visibility = "hidden"
+    createBoardDict()
+    writeTune()
+  } else {
+    text = document.getElementById("custom-tuning")
+    text.style.visibility = "visible"
+    text.placeholder = tuning
+  }
+  
 };
 
 // Draw Circle at a given Coo with the text T
@@ -162,7 +181,7 @@ function drawCircleForGuitar(c, f, T) {
     X = 18+(27*(f-1));
     Y = 10+(29.25*(c-1));
   } else {
-    X = 7;
+    X = 4;
     Y = 10+(29.25*(c-1));
   }
   drawCircleGen(X, Y, T);
@@ -208,6 +227,9 @@ function update() {
 
 // Draw Cricles For Each Checked Box
 function drawAllCircles(){
+  canvas = document.getElementById('circle');
+  const context = canvas.getContext('2d');
+  context.clearRect(0, 0, canvas.width, canvas.height);
   checkedcheckboxes.forEach((c) => {
     if(globalInstrument == 'G') {
       for (const [key, value] of Object.entries(createBoardDict()[c])) {
@@ -427,15 +449,12 @@ function generateTable(table, chord_dict) {
 
 // Create the dict notesOnBoard or use it if already existing
 function createBoardDict(){
-  if(notesOnBoard != -1) {
-    return notesOnBoard;
-  };
   notesOnBoardLocal = {};
   for(u=0; u<notesaze.length; u++){
     note = notesaze[u];
     c = [];
     for(i=0; i<6; i++) {
-      stringN = baseNoteGuitar[i];
+      stringN = tuning[i];
       y = notesaze.indexOf(stringN);
       if(! notesaze.includes(note)) {
         note = equ[note];
@@ -455,3 +474,24 @@ function createBoardDict(){
   notesOnBoard = notesOnBoardLocal;
   return notesOnBoardLocal;
 };
+
+function onTestChange() {
+  var key = window.event.keyCode;
+  t = document.getElementById("custom-tuning").value
+  document.getElementById("custom-tuning").value = t.toUpperCase()
+  
+  if (key === 13) {
+    if(t.length == 6) {
+      t = t.toUpperCase()
+      tuning = t.toUpperCase()
+      writeTune()
+      return false;
+    } else {
+      alert("Seuls les accordages de 6 cordes sont acceptés.")
+      document.getElementById("custom-tuning").value = ""
+    }
+  }
+  else {
+      return true;
+  }
+}
