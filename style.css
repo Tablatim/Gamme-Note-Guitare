@@ -38,3 +38,10 @@ tfoot {
   margin-right: auto;
   margin-top: 5px;
 }
+
+#custom-tuning {
+    position: relative;
+    top: 5px;
+    visibility: hidden;
+    resize: none;
+}
